@@ -9,7 +9,6 @@
  */
 
 import { ExecutionContext } from '@cloudflare/workers-types/experimental';
-import { Bot, webhookCallback } from 'grammy';
 import { resetWebhook, setupBot, getHandler } from './bot';
 
 export interface Env {
@@ -30,6 +29,8 @@ export interface Env {
 
 	TELEGRAM_TOKEN: string;
 
+	DESTINATION_CHAT: string;
+
 	HOST?: string;
 }
 
@@ -37,9 +38,9 @@ export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const url = new URL(request.url);
 
-		const token = env.TELEGRAM_TOKEN;
 		setupBot(env);
-
+		
+		const token = env.TELEGRAM_TOKEN;
 		if (url.pathname.endsWith('bot' + token)) {
 			return getHandler()(request);
 		}
@@ -47,7 +48,7 @@ export default {
 		const host = env.HOST || url.host;
 
 		if (url.pathname.endsWith('resetWebhook' + token)) {
-			return new Response(await resetWebhook(bot, `https://${host}/bot${token}`));
+			return new Response(await resetWebhook(`https://${host}/bot${token}`));
 		}
 
 		return new Response(`My host is ${host}; path is ${url.pathname}`);

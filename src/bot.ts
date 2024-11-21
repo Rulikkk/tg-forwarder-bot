@@ -1,15 +1,14 @@
 import { Bot, webhookCallback } from 'grammy';
-import { ParseMode } from 'grammy/types';
+import { ParseMode, WebhookInfo } from 'grammy/types';
 import { Env } from './index.js';
 
 let bot: Bot;
 
 export function setupBot(env: Env) {
-	bot = new Bot(token);
+	bot = new Bot(env.TELEGRAM_TOKEN);
 
 	bot.on('message', async (ctx) => {
-		const msg = ctx.msg;
-		ctx.reply(msg.text);
+		await ctx.copyMessage(env.DESTINATION_CHAT);
 	});
 }
 

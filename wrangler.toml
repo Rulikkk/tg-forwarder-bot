@@ -1,4 +1,4 @@
-name = "get-best-bot"
+name = "tg-forwarder-bot"
 main = "src/index.ts"
 compatibility_date = "2024-01-29"
 # node_compat = true
